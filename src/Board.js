@@ -11,19 +11,22 @@ export default class Board extends Component {
       player: 'X'
     }
   }
-  
+//generate is a function we call to start and restart the game
   generate = () => {
-    let { turn } =  this.state
+// This function is stating that it is Player X's turn and the turn count is 0
+    let { turn, player } =  this.state
+    player = 'X'
     turn = 0
     let num = 9
-    // let { arr } = this.state
     let arr = []
+//The for loop is pushing 9 empty arrays indexes to create the desired number of boxes 
     for(let i=0;i<num;i++){
       arr.push('')
     }
-    this.setState({arr, turn})
+    this.setState({arr, turn, player})
   }
-  
+
+//grabIndex is how we are taking the winning indexes and confirming each winning outcome 
   grabIndex=(a,b,c)=>{
     let{arr}=this.state
     let val1 = arr[a]
@@ -31,7 +34,8 @@ export default class Board extends Component {
     let val3 = arr[c]
     return `${val1}${val2}${val3}`
   }
-  
+
+//winLose is where we are checking each possible winning outcome for X and for O and generating an alert, and restarting the game after each win
   winLose =()=>{
     let { arr, turn} = this.state
     let{grabIndex,generate}=this
@@ -82,9 +86,11 @@ export default class Board extends Component {
     }, 100);
     }
   }
-  
-  ticTacMark = (e) => {
 
+//tictTacMark is getting the id of each box and determining whether to place X or O, depending on the turn count.
+//It also runs winLose on each click to determine if a winning outcome has occurred
+//It also updates activePlayer
+  ticTacMark = (e) => {
     let { turn, arr } = this.state
     let id = e.target.id
     if(arr[id]===""){
@@ -99,10 +105,11 @@ export default class Board extends Component {
           this.setState({turn, arr})
           this.winLose()
         }
+      this.activePlayer()
     }
-    this.activePlayer()
   }
-  
+
+//activePlayer determines which players turn it is - O for even turns and X for odd turns 
   activePlayer = () => {
     let { player,turn } = this.state
     if(turn % 2 === 0){
@@ -113,7 +120,8 @@ export default class Board extends Component {
       this.setState({player})
     }
   }
-  
+
+//componentWillMount is a built-in-function that runs generate on each page load
   componentWillMount(){
     this.generate();
   }
